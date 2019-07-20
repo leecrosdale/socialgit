@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Author;
+use App\Enums\RepositoryStatus;
 use App\Platform;
 use App\Repository;
+use App\RepositoryData;
 use App\Utilities\RepositoryFinder;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class RepositoryController extends Controller
 {
@@ -18,7 +21,7 @@ class RepositoryController extends Controller
     public function index(Author $author, Repository $repository)
     {
 
-        if (!$author->exists || !$repository->exists) {
+        if (!$author->exists || !$repository->exists || $repository->status === RepositoryStatus::NOT_SETUP) {
 
             // We don't have this on record, where is it?
             // GitHub / GitLab / BitBucket
@@ -29,22 +32,48 @@ class RepositoryController extends Controller
                 return abort(404);
             }
 
-            $platform_ids = [];
-
-            foreach ($finder->found as $found) {
-                $platform_ids[] = Platform::where('name', $found)->firstOrFail()->id;
-            }
-
             $author->save();
             $repository->save();
 
-            $repository->platforms()->sync($platform_ids);
+            foreach ($finder->platforms as $platform) {
+                if ($platform->contents) {
+                    RepositoryData::create([
+                        'repository_id' => $repository->id,
+                        'platform_id' => Platform::where('name', $platform->name)->firstOrFail()->id,
+                        'data' => \GuzzleHttp\json_decode($platform->contents)
+                    ]);
+                }
+            }
+
+            if (count($finder->found) === 1) {
+                $this->assignPlatform($repository, $finder->found[0]);
+            } else {
+                return view('repository.new')->withRepository($repository)->withAuthor($author)->withFoundPlatforms($finder->found);
+            }
 
         }
+        return view('repository.index')->withRepository($repository)->withAuthor($author)->withPlatform($repository->platform);
+    }
 
-        return view('repository.index')->withRepository($repository)->withAuthor($author)->withPlatforms($repository->platforms);
+    public function setup(Author $author, Repository $repository) : Response
+    {
+        $this->assignPlatform($repository, request()->get('platform'));
+        return back();
+    }
+
+    private function assignPlatform(Repository $repository, $platformName) : bool
+    {
+        $platform = Platform::where('name', $platformName)->firstOrFail();
+
+        $repository->status = RepositoryStatus::SETUP;
+        $repository->platform_id = $platform->id;
+
+        $repository->datum()->where('platform_id', '!=', $platform->id)->delete();
+
+        return $repository->save();
 
     }
+
 
     /**
      * Show the form for creating a new resource.

@@ -20,4 +20,4 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('{author}/{repository}', 'RepositoryController@index');
-
+Route::post('{author}/{repository}', 'RepositoryController@setup');

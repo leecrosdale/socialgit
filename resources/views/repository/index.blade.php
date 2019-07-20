@@ -11,6 +11,14 @@
                     <div class="class-body p-1">
                         <div class="row p-1">
                             <div class="col-md-4">
+                                <b>Platform</b>
+                            </div>
+                            <div class="col-md-8">
+                                {{ $platform->name }}
+                            </div>
+                        </div>
+                        <div class="row p-1">
+                            <div class="col-md-4">
                                 <b>Repository</b>
                             </div>
                             <div class="col-md-8">
@@ -41,7 +49,7 @@
                                 <b>PRs</b>
                             </div>
                             <div class="col-md-8">
-                                <a href="#">url here</a>
+                                0
                             </div>
                         </div>
                         <div class="row p-1">
@@ -49,7 +57,7 @@
                                 <b>Issues</b>
                             </div>
                             <div class="col-md-8">
-                                <a href="#">url here</a>
+                                0
                             </div>
                         </div>
                         <div class="row p-1">
@@ -68,7 +76,7 @@
                                 <b>Active</b>
                             </div>
                             <div class="col-md-8">
-                                <a href="#">url here</a>
+                                0
                             </div>
                         </div>
                         <div class="row p-1">
@@ -76,7 +84,7 @@
                                 <b>Stale</b>
                             </div>
                             <div class="col-md-8">
-                                <a href="#">url here</a>
+                                0
                             </div>
                         </div>
                     </div>

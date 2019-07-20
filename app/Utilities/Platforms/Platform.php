@@ -4,6 +4,7 @@
 namespace App\Utilities\Platforms;
 
 
+use App\Repository;
 use GuzzleHttp\Client;
 
 abstract class Platform
@@ -15,6 +16,9 @@ abstract class Platform
     public $name;
 
     public $path;
+
+    abstract function convertToStandard(Repository $repository);
+
 
     public function __construct()
     {
@@ -38,6 +42,7 @@ abstract class Platform
         return \GuzzleHttp\json_encode(['status' => 'ok', 'repository' => $this->contents]);
 
     }
+
 
 
 }

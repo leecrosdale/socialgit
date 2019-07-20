@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePlatformRepositoryTable extends Migration
+class CreateRepositoryDataTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreatePlatformRepositoryTable extends Migration
      */
     public function up()
     {
-        Schema::create('platform_repository', function (Blueprint $table) {
+        Schema::create('repository_data', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('platform_id');
             $table->unsignedBigInteger('repository_id');
+            $table->unsignedBigInteger('platform_id');
+            $table->text('data');
             $table->timestamps();
 
             $table->foreign('platform_id')->references('id')->on('platforms');
             $table->foreign('repository_id')->references('id')->on('repositories');
-
         });
     }
 
@@ -32,6 +32,6 @@ class CreatePlatformRepositoryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('platform_repository');
+        Schema::dropIfExists('repository_data');
     }
 }

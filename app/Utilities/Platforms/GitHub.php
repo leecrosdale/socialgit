@@ -4,6 +4,8 @@
 namespace App\Utilities\Platforms;
 
 
+use App\Repository;
+
 class GitHub extends Platform
 {
 
@@ -23,4 +25,8 @@ class GitHub extends Platform
     }
 
 
+    public function convertToStandard(Repository $repository)
+    {
+        
+    }
 }

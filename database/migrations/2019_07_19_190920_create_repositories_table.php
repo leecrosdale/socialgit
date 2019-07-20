@@ -18,7 +18,11 @@ class CreateRepositoriesTable extends Migration
             $table->string('name');
             $table->boolean('public')->default(1);
             $table->dateTime('last_updated')->useCurrent();
+            $table->tinyInteger('status')->default(0);
+            $table->unsignedBigInteger('platform_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('platform_id')->references('id')->on('platforms');
         });
     }
 
